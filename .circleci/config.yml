@@ -16,7 +16,7 @@ jobs:
           name: Run API Tests
           command: |
             newman run Assessment-weather.postman_collection.json \
-            -e environmentVariable.postman_collection.json \
+            -e environmentVariable.postman_environment.json \
             -d data.csv\
             
 
