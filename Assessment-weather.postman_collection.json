@@ -1,0 +1,102 @@
+{
+  "info": {
+    "_postman_id": "dec5b097-79ba-4da8-bca4-285f186f6813",
+    "name": "Assessment-weather",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "6906805"
+  },
+  "item": [
+    {
+      "name": "Api",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "let city = pm.iterationData.get(\"city\") || pm.environment.get(\"city\") || \"Sydney\";",
+              "let aqi = pm.iterationData.get(\"aqi\") || \"yes\";",
+              "",
+              "pm.variables.set(\"city\", city);",
+              "pm.variables.set(\"aqi\", aqi);",
+              "",
+              "",
+              "console.log(\"AQI:\", aqi);"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "// Parse JSON response",
+              "let response = pm.response.json();",
+              "",
+              "// Validate response structure",
+              "pm.test(\"Response contains current weather data\", function () {",
+              "    pm.expect(response).to.have.property(\"current\");",
+              "});",
+              "",
+              "let airQuality = response.current.air_quality;",
+              "let country = response.location.country;",
+              "",
+              "let city = response.location.name;",
+              "// Create dynamic variable name",
+              "let variableName = \"temperature_\" + city;",
+              "",
+              "let temperatureInCelsius = response.current.temp_c;",
+              "// Store in environment",
+              "pm.environment.set(variableName, temperatureInCelsius);",
+              "",
+              "pm.test(`City: ${city} | Temp: ${temperatureInCelsius} °C`, function () {",
+              "    pm.expect(true).to.be.true;",
+              "});",
+              "",
+              "console.log (\"city\", city);",
+              "console.log(\"print air - Quality:\", airQuality );",
+              "",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://api.weatherapi.com/v1/current.json?key=525cc6d19b8546c2ba833957260704&q={{city}}&aqi=yes",
+          "protocol": "https",
+          "host": [
+            "api",
+            "weatherapi",
+            "com"
+          ],
+          "path": [
+            "v1",
+            "current.json"
+          ],
+          "query": [
+            {
+              "key": "key",
+              "value": "525cc6d19b8546c2ba833957260704"
+            },
+            {
+              "key": "q",
+              "value": "{{city}}"
+            },
+            {
+              "key": "aqi",
+              "value": "yes"
+            }
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}

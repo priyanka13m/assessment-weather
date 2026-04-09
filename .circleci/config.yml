@@ -1,0 +1,27 @@
+version: 2.1
+
+jobs:
+  postman-tests:
+    docker:
+      - image: cimg/node:18.0
+
+    steps:
+      - checkout
+
+      - run:
+          name: Install Newman
+          command: npm install -g newman
+
+      - run:
+          name: Run API Tests
+          command: |
+            newman run Assessment-weather.postman_collection.json \
+            -e environmentVariable.postman_collection.json \
+            -d data.csv\
+            
+
+workflows:
+  version: 2
+  run-tests:
+    jobs:
+      - postman-tests
